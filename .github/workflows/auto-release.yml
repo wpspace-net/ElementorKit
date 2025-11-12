@@ -1,0 +1,133 @@
+name: Auto Version, Build & Release
+
+on:
+  push:
+    branches:
+      - main  # Trigger when you push to main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Get current version from plugin header
+      - name: Get plugin version
+        id: get_version
+        run: |
+          # Read version from elementorkit.php
+          VERSION_LINE=$(grep -i 'Version:' elementorkit.php)
+          VERSION=$(echo $VERSION_LINE | sed 's/.*Version:[[:space:]]*//' | sed 's/[[:space:]]*$//')
+          echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version found: $VERSION"
+
+      # 3. Check if tag already exists
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${PLUGIN_VERSION}" >/dev/null 2>&1; then
+            echo "Tag v${PLUGIN_VERSION} already exists. Skipping release."
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "Tag v${PLUGIN_VERSION} does not exist. Proceeding with release."
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      # 4. Create git tag (handled by release action)
+      - name: Prepare release info
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          echo "Preparing release for version v${PLUGIN_VERSION}"
+          echo "Tag will be created by the release action"
+
+      # 5. Zip plugin (exclude development files)
+      - name: Zip plugin
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          PLUGIN_NAME="elementorkit"
+          ZIP_FILE="./dist/${PLUGIN_NAME}-v${PLUGIN_VERSION}.zip"
+          mkdir -p ./dist
+          
+          # Create a temporary directory for the plugin
+          mkdir -p ./temp-build/$PLUGIN_NAME
+          
+          # Copy plugin files (exclude development files)
+          rsync -av --exclude='src/' \
+                    --exclude='node_modules/' \
+                    --exclude='.git*' \
+                    --exclude='.github/' \
+                    --exclude='*.log' \
+                    --exclude='*.md' \
+                    --exclude='*.stories.jsx' \
+                    --exclude='package*.json' \
+                    --exclude='webpack*' \
+                    --exclude='tsconfig.json' \
+                    --exclude='.storybook/' \
+                    --exclude='dist/' \
+                    --exclude='temp-build/' \
+                    ./ ./temp-build/$PLUGIN_NAME/
+          
+          # Create the zip from the temp directory
+          cd temp-build
+          zip -r "../$ZIP_FILE" $PLUGIN_NAME/
+          cd ..
+          
+          # Cleanup
+          rm -rf ./temp-build
+          
+          echo "Created release package: $ZIP_FILE"
+          ls -la ./dist/
+
+      # 6. Create GitHub Release
+      - name: Create Release
+        if: env.TAG_EXISTS == 'false'
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ env.PLUGIN_VERSION }}"
+          name: "ElementorKit v${{ env.PLUGIN_VERSION }}"
+          body: |
+            ## ElementorKit v${{ env.PLUGIN_VERSION }}
+            
+            ### 🎉 What's New
+            - Bug fixes and improvements
+            - Enhanced compatibility
+            - Updated dependencies
+            
+            ### 📦 Installation
+            1. Download the plugin zip file below
+            2. Upload to WordPress admin under Plugins → Add New → Upload Plugin
+            3. Activate the plugin
+            
+            ### 🔧 Requirements
+            - WordPress 5.0 or higher
+            - Elementor 3.0 or higher
+            - PHP 5.6 or higher
+            
+            ### 📚 Documentation
+            Visit [elementorkit.site](https://elementorkit.site) for complete documentation and support.
+            
+          draft: false
+          prerelease: false
+          make_latest: true
+          generate_release_notes: true
+          files: |
+            ./dist/elementorkit-v${{ env.PLUGIN_VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7. Success notification
+      - name: Success notification
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          echo "✅ Successfully created release v${PLUGIN_VERSION}"
+          echo "📦 Release package: elementorkit-v${PLUGIN_VERSION}.zip"
+          echo "🔗 Check the release at: https://github.com/${{ github.repository }}/releases/tag/v${PLUGIN_VERSION}"
