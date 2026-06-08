@@ -23,9 +23,13 @@ jobs:
       - name: Get plugin version
         id: get_version
         run: |
-          # Read version from elementorkit.php
-          VERSION_LINE=$(grep -i 'Version:' elementorkit.php)
-          VERSION=$(echo $VERSION_LINE | sed 's/.*Version:[[:space:]]*//' | sed 's/[[:space:]]*$//')
+          # Read the version from the plugin header (first "Version:" line only).
+          VERSION_LINE=$(grep -m1 -iE '^\s*\*?\s*Version:' elementorkit.php)
+          VERSION=$(echo "$VERSION_LINE" | sed -E 's/.*Version:[[:space:]]*//' | sed -E 's/[[:space:]]*$//')
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not determine plugin version from elementorkit.php"
+            exit 1
+          fi
           echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version found: $VERSION"
 
@@ -60,17 +64,11 @@ jobs:
           mkdir -p ./temp-build/$PLUGIN_NAME
           
           # Copy plugin files (exclude development files)
-          rsync -av --exclude='src/' \
-                    --exclude='node_modules/' \
-                    --exclude='.git*' \
+          rsync -av --exclude='.git*' \
                     --exclude='.github/' \
                     --exclude='*.log' \
                     --exclude='*.md' \
-                    --exclude='*.stories.jsx' \
-                    --exclude='package*.json' \
-                    --exclude='webpack*' \
-                    --exclude='tsconfig.json' \
-                    --exclude='.storybook/' \
+                    --exclude='.DS_Store' \
                     --exclude='dist/' \
                     --exclude='temp-build/' \
                     ./ ./temp-build/$PLUGIN_NAME/
@@ -110,7 +108,7 @@ jobs:
             ### 🔧 Requirements
             - WordPress 5.0 or higher
             - Elementor 3.0 or higher
-            - PHP 5.6 or higher
+            - PHP 7.4 or higher
             
             ### 📚 Documentation
             Visit [elementorkit.site](https://elementorkit.site) for complete documentation and support.

@@ -42,7 +42,7 @@ class Welcome extends Base{
 		);
 		add_action( 'admin_print_scripts-' . $page, [ $this, 'admin_page_assets' ] );
 
-		$submenu = add_submenu_page(
+		add_submenu_page(
 			ELEMENTORKIT_SLUG,
 			__( 'ElementorKit', 'elementorkit' ),
 			__( 'Welcome', 'elementorkit' ),
@@ -51,7 +51,7 @@ class Welcome extends Base{
 			[ $this, 'admin_page_open' ]
 		);
 
-		$submenu = add_submenu_page(
+		add_submenu_page(
 			ELEMENTORKIT_SLUG,
 			__( 'Template Kits', 'elementorkit' ),
 			__( 'Template Kits', 'elementorkit' ),
@@ -60,7 +60,7 @@ class Welcome extends Base{
 			[ $this, 'admin_page_open' ]
 		);
 
-		$submenu = add_submenu_page(
+		add_submenu_page(
 			ELEMENTORKIT_SLUG,
 			__( 'Installed Kits', 'elementorkit' ),
 			__( 'Installed Kits', 'elementorkit' ),
@@ -69,7 +69,7 @@ class Welcome extends Base{
 			[ $this, 'admin_page_open' ]
 		);
 
-		$submenu = add_submenu_page(
+		add_submenu_page(
 			ELEMENTORKIT_SLUG,
 			__( 'Photos', 'elementorkit' ),
 			__( 'Photos', 'elementorkit' ),
@@ -78,7 +78,7 @@ class Welcome extends Base{
 			[ $this, 'admin_page_open' ]
 		);
 
-		$submenu = add_submenu_page(
+		add_submenu_page(
 			ELEMENTORKIT_SLUG,
 			__( 'Settings', 'elementorkit' ),
 			__( 'Settings', 'elementorkit' ),
@@ -112,6 +112,13 @@ class Welcome extends Base{
 	public function admin_page_assets(){
 		wp_enqueue_style( 'elementorkit-admin', ELEMENTORKIT_URI . 'assets/main.css', [], filemtime( ELEMENTORKIT_DIR . 'assets/main.css' ) );
 		wp_enqueue_script( 'elementorkit-admin', ELEMENTORKIT_URI . 'assets/main.js', [], filemtime( ELEMENTORKIT_DIR . 'assets/main.js' ), true );
+
+		// Attach the React environment config to our bundle. The guard prevents a
+		// duplicate `var elementorkit` declaration when several enqueue paths
+		// (plugin page, Elementor editor, media library) run on the same request.
+		if ( ! wp_scripts()->get_data( 'elementorkit-admin', 'data' ) ) {
+			wp_localize_script( 'elementorkit-admin', 'elementorkit', Options::get_instance()->get_admin_env_vars() );
+		}
 	}
 
 }

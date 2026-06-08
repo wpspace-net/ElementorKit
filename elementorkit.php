@@ -4,7 +4,9 @@
  * Description: Access beautifully designed Elementor template kits and millions of royalty-free photos with ElementorKit.
  * Author: ElementorKit
  * Author URI: https://elementorkit.site
- * Version: 1.0.0
+ * Version: 1.1.0
+ * Requires at least: 5.0
+ * Requires PHP: 7.4
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Elementor tested up to: 3.32.4
@@ -30,12 +32,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'ELEMENTORKIT_SLUG', 'elementorkit' );
-define( 'ELEMENTORKIT_VER', '1.0.0' );
+define( 'ELEMENTORKIT_VER', '1.1.0' );
 define( 'ELEMENTORKIT_FILE', __FILE__ );
 define( 'ELEMENTORKIT_DIR', plugin_dir_path( ELEMENTORKIT_FILE ) );
 define( 'ELEMENTORKIT_URI', plugins_url( '/', ELEMENTORKIT_FILE ) );
 define( 'ELEMENTORKIT_CONTENT_NAME', 'Template Kit' );
-define( 'ELEMENTORKIT_PHP_VERSION', '5.6' );
+define( 'ELEMENTORKIT_PHP_VERSION', '7.4' );
+define( 'ELEMENTORKIT_WP_VERSION', '5.0' );
 define( 'ELEMENTORKIT_API_NAMESPACE', ELEMENTORKIT_SLUG . '/v2' );
 
 /**
@@ -52,7 +55,7 @@ $elementorkit_update_checker = PucFactory::buildUpdateChecker(
 
 if ( ! version_compare( PHP_VERSION, ELEMENTORKIT_PHP_VERSION, '>=' ) ) {
 	add_action( 'admin_notices', 'elementorkit_fail_php_version' );
-} elseif ( ! version_compare( get_bloginfo( 'version' ), '4.6', '>=' ) ) {
+} elseif ( ! version_compare( get_bloginfo( 'version' ), ELEMENTORKIT_WP_VERSION, '>=' ) ) {
 	add_action( 'admin_notices', 'elementorkit_fail_wp_version' );
 } else {
 	require ELEMENTORKIT_DIR . 'inc/bootstrap.php';
@@ -83,13 +86,13 @@ add_action( 'plugins_loaded', 'elementorkit_load_plugin_textdomain' );
  */
 function elementorkit_fail_php_version() {
 	$message = sprintf(
-		/* translators: %s: PHP version */
-		esc_html__( 'ElementorKit requires PHP version %s+, plugin is currently NOT ACTIVE. Please contact the hosting provider. WordPress recommends version %s.', 'elementorkit' ),
+		/* translators: 1: required PHP version, 2: link to WordPress requirements page */
+		esc_html__( 'ElementorKit requires PHP version %1$s+, plugin is currently NOT ACTIVE. Please contact the hosting provider. See the %2$s.', 'elementorkit' ),
 		ELEMENTORKIT_PHP_VERSION,
 		sprintf(
 			'<a href="%s" target="_blank">%s</a>',
 			esc_url( 'https://wordpress.org/about/requirements/' ),
-			esc_html__( '7.2 or above', 'elementorkit' )
+			esc_html__( 'WordPress hosting requirements', 'elementorkit' )
 		)
 	);
 
@@ -108,7 +111,7 @@ function elementorkit_fail_php_version() {
  */
 function elementorkit_fail_wp_version() {
 	/* translators: %s: WordPress version */
-	$message      = sprintf( esc_html__( 'ElementorKit requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT ACTIVE.', 'elementorkit' ), '4.6' );
+	$message      = sprintf( esc_html__( 'ElementorKit requires WordPress version %s+. Because you are using an earlier version, the plugin is currently NOT ACTIVE.', 'elementorkit' ), ELEMENTORKIT_WP_VERSION );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }

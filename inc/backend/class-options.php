@@ -27,29 +27,27 @@ class Options extends Base {
 
 	const OPTION_KEY = 'elementorkit_options';
 
-	public function __construct() {
-		add_action( 'admin_head', array( $this, 'print_admin_env_vars' ) );
-		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'print_admin_env_vars' ] );
-		add_action( 'elementor/preview/enqueue_styles', [ $this, 'print_admin_env_vars' ] );
-	}
-
 	/**
-	 * Prints some variables we can access from within React
+	 * Builds the environment variables consumed by the React app via the
+	 * global `elementorkit` JS object.
+	 *
+	 * The data is attached to the `elementorkit-admin` script handle (see
+	 * Welcome::admin_page_assets) so it is only emitted on the requests where
+	 * our bundle is actually loaded, instead of on every admin page head.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array
 	 */
-	public function print_admin_env_vars() {
-		$admin_options = array(
+	public function get_admin_env_vars() {
+		return array(
 			'api_nonce'           => wp_create_nonce( 'wp_rest' ),
 			'api_url'             => get_rest_url() . 'elementorkit/v2/',
 			'subscription_status' => Subscription::get_instance()->get_subscription_status(),
 			'downloaded_items'    => Downloaded_Items::get_instance()->get_downloaded_items(),
-			'dismissed_banners'   => Options::get_instance()->get( 'dismissed_banners', [] ),
-			'start_page'          => Options::get_instance()->get( 'start_page', 'welcome' ),
+			'dismissed_banners'   => $this->get( 'dismissed_banners', [] ),
+			'start_page'          => $this->get( 'start_page', 'welcome' ),
 		);
-		?>
-		<script>
-      var elementorkit = <?php echo json_encode( $admin_options ); ?>;
-		</script>
-		<?php
 	}
 
 	/**

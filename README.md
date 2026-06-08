@@ -4,9 +4,9 @@
 
 **Contributors:** [ElementorKit](https://elementorkit.site)  
 **Tags:** elementor, templates, template kit, stock photos, wordpress  
-**Requires at least:** 4.6  
-**Tested up to:** 6.8  
-**Requires PHP:** 5.6  
+**Requires at least:** 5.0  
+**Tested up to:** 7.0  
+**Requires PHP:** 7.4  
 
 Access thousands of Elementor template kits and royalty-free stock photos with ElementorKit.
 
@@ -67,6 +67,12 @@ For questions, issues, or feedback, visit [https://elementorkit.site/contact-us/
 ---
 
 ## Changelog
+
+### 1.1.0 - 2026-06-07
+- Security: escaped admin environment output with `wp_json_encode()` and sanitized the AJAX nonce/endpoint inputs.
+- Fix: the class autoloader no longer halts the site with a fatal error when a class file is missing.
+- Improvement: raised minimum requirements to WordPress 5.0 and PHP 7.4, and updated "tested up to" versions.
+- Improvement: tidied the admin menu registration and aligned version requirement notices.
 
 ### 1.0.0 - 2025-11-11
 - Initial ElementorKit release

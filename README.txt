@@ -1,10 +1,10 @@
 === ElementorKit – Premium Template Kits & Stock Photos for WordPress ===
 Contributors: ElementorKit
 Tags: elementor, templates, template kit, stock photos, wordpress
-Requires at least: 4.6
-Tested up to: 6.8
-Requires PHP: 5.6
-Stable tag: 1.0.0
+Requires at least: 5.0
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,6 +66,12 @@ Yes. ElementorKit uses a secure service hosted on [elementorkit.site](https://el
 For questions, issues, or feedback, visit [https://elementorkit.site/contact-us/](https://elementorkit.site/contact-us/).
 
 == Changelog ==
+
+= 1.1.0 - 2026-06-07 =
+* Security: escaped admin environment output with `wp_json_encode()` and sanitized the AJAX nonce/endpoint inputs.
+* Fix: the class autoloader no longer halts the site with a fatal error when a class file is missing.
+* Improvement: raised minimum requirements to WordPress 5.0 and PHP 7.4, and updated "tested up to" versions.
+* Improvement: tidied the admin menu registration and aligned version requirement notices.
 
 = 1.0.0 - 2025-11-11 =
 * Initial ElementorKit release

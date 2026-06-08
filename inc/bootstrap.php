@@ -37,8 +37,10 @@ spl_autoload_register(
 		$file = $base_dir . DIRECTORY_SEPARATOR . $class_folder . 'class-' . $class_name . '.php';
 		if ( file_exists( $file ) ) {
 			require $file;
-		} else {
-			die( esc_html( basename( $file ) . ' not found.' ) );
+		} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// Avoid a fatal "die" in production; surface the issue only while debugging
+			// so that class_exists() checks and unrelated requests are not killed.
+			error_log( 'ElementorKit autoloader: ' . basename( $file ) . ' not found.' );
 		}
 	}
 );

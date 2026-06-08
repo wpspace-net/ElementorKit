@@ -57,13 +57,13 @@ class REST extends Base {
 
 		$nonce = null;
 		if ( isset( $_REQUEST['_wpnonce'] ) ) {
-			$nonce = $_REQUEST['_wpnonce'];
+			$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 		} elseif ( isset( $_SERVER['HTTP_X_WP_NONCE'] ) ) {
-			$nonce = $_SERVER['HTTP_X_WP_NONCE'];
+			$nonce = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) );
 		}
 		if ( $nonce && wp_verify_nonce( $nonce, 'wp_rest' ) && isset( $_GET['endpoint'] ) ) {
 			$namespace = ELEMENTORKIT_API_NAMESPACE;
-			$endpoint  = $_GET['endpoint'];
+			$endpoint  = sanitize_text_field( wp_unslash( $_GET['endpoint'] ) );
 			$server    = rest_get_server();
 			$routes    = $server->get_routes();
 			$rest_key  = '/' . $namespace . '/' . $endpoint;
