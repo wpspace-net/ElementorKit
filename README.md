@@ -68,6 +68,9 @@ For questions, issues, or feedback, visit [https://elementorkit.site/contact-us/
 
 ## Changelog
 
+### 1.1.2 - 2026-06-08
+- Fix: resolved a JavaScript error that prevented the settings page from loading.
+
 ### 1.1.1 - 2026-06-08
 - Fix: template kit "More Info" links now point to elementorkit.site instead of elements.envato.com.
 - Fix: Gray color filter swatch in the photos search now displays a visible border.
