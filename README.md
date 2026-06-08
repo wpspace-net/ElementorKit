@@ -68,6 +68,12 @@ For questions, issues, or feedback, visit [https://elementorkit.site/contact-us/
 
 ## Changelog
 
+### 1.1.1 - 2026-06-08
+- Fix: template kit "More Info" links now point to elementorkit.site instead of elements.envato.com.
+- Fix: Gray color filter swatch in the photos search now displays a visible border.
+- Fix: settings page dropdown and button rows are vertically aligned.
+- Improvement: added a Photo Import setting to enable or disable automatic resizing of large imported photos.
+
 ### 1.1.0 - 2026-06-07
 - Security: escaped admin environment output with `wp_json_encode()` and sanitized the AJAX nonce/endpoint inputs.
 - Fix: the class autoloader no longer halts the site with a fatal error when a class file is missing.

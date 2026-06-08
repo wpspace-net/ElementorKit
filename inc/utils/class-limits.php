@@ -25,12 +25,19 @@ class Limits extends Base {
 	/**
 	 * We raise our memory, timeout limits and image threshold during import because
 	 * some operations take a lot of processing (i.e. large images in Template Kits).
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param bool $disable_big_image_scaling When true, WordPress will not auto-scale
+	 *                                        large images (original size is kept).
 	 */
-	public function raise_limits() {
+	public function raise_limits( $disable_big_image_scaling = true ) {
 
 		// WordPress added a size threshold when uploading images in 5.3.0. Adding This filter
 		// will remove that threshold. Reference - https://developer.wordpress.org/reference/hooks/big_image_size_threshold/.
-		add_filter( 'big_image_size_threshold', '__return_false' );
+		if ( $disable_big_image_scaling ) {
+			add_filter( 'big_image_size_threshold', '__return_false' );
+		}
 
 		// WordPress has a built in way to raise the memory limit thankfully:
 		wp_raise_memory_limit( 'admin' );

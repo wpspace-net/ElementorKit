@@ -4,7 +4,7 @@
  * Description: Access beautifully designed Elementor template kits and millions of royalty-free photos with ElementorKit.
  * Author: ElementorKit
  * Author URI: https://elementorkit.site
- * Version: 1.1.0
+ * Version: 1.1.1
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * License: GPLv3 or later
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'ELEMENTORKIT_SLUG', 'elementorkit' );
-define( 'ELEMENTORKIT_VER', '1.1.0' );
+define( 'ELEMENTORKIT_VER', '1.1.1' );
 define( 'ELEMENTORKIT_FILE', __FILE__ );
 define( 'ELEMENTORKIT_DIR', plugin_dir_path( ELEMENTORKIT_FILE ) );
 define( 'ELEMENTORKIT_URI', plugins_url( '/', ELEMENTORKIT_FILE ) );

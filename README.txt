@@ -4,7 +4,7 @@ Tags: elementor, templates, template kit, stock photos, wordpress
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,6 +66,12 @@ Yes. ElementorKit uses a secure service hosted on [elementorkit.site](https://el
 For questions, issues, or feedback, visit [https://elementorkit.site/contact-us/](https://elementorkit.site/contact-us/).
 
 == Changelog ==
+
+= 1.1.1 - 2026-06-08 =
+* Fix: template kit "More Info" links now point to elementorkit.site instead of elements.envato.com.
+* Fix: Gray color filter swatch in the photos search now displays a visible border.
+* Fix: settings page dropdown and button rows are vertically aligned.
+* Improvement: added a Photo Import setting to enable or disable automatic resizing of large imported photos.
 
 = 1.1.0 - 2026-06-07 =
 * Security: escaped admin environment output with `wp_json_encode()` and sanitized the AJAX nonce/endpoint inputs.

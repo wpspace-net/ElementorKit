@@ -45,6 +45,16 @@ class Settings extends API {
 	 *
 	 * @return \WP_REST_Response
 	 */
+	public function save_photo_resize_setting( $request ) {
+
+		$photo_resize_enabled = $request->get_param( 'photoResizeEnabled' );
+		Options::get_instance()->set( 'photo_resize_enabled', (bool) $photo_resize_enabled );
+
+		return $this->format_success( [
+			'saved' => true,
+		] );
+	}
+
 	public function save_preferred_start_page( $request ) {
 
 		$start_page = $request->get_param( 'startPage' );
@@ -315,6 +325,7 @@ class Settings extends API {
 
 	public function register_api_endpoints() {
 		$this->register_endpoint( 'resetUserSettings', [ $this, 'reset_users_settings' ] );
+		$this->register_endpoint( 'savePhotoResizeSetting', [ $this, 'save_photo_resize_setting' ] );
 		$this->register_endpoint( 'savePreferredStartPage', [ $this, 'save_preferred_start_page' ] );
 		$this->register_endpoint( 'getServerLimits', [ $this, 'get_server_limits' ] );
 		$this->register_endpoint( 'getElementorGlobalStyleTemplates', [ $this, 'get_elementor_global_style_templates' ] );

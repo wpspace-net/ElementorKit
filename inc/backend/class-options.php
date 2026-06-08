@@ -41,12 +41,13 @@ class Options extends Base {
 	 */
 	public function get_admin_env_vars() {
 		return array(
-			'api_nonce'           => wp_create_nonce( 'wp_rest' ),
-			'api_url'             => get_rest_url() . 'elementorkit/v2/',
-			'subscription_status' => Subscription::get_instance()->get_subscription_status(),
-			'downloaded_items'    => Downloaded_Items::get_instance()->get_downloaded_items(),
-			'dismissed_banners'   => $this->get( 'dismissed_banners', [] ),
-			'start_page'          => $this->get( 'start_page', 'welcome' ),
+			'api_nonce'            => wp_create_nonce( 'wp_rest' ),
+			'api_url'              => get_rest_url() . 'elementorkit/v2/',
+			'subscription_status'  => Subscription::get_instance()->get_subscription_status(),
+			'downloaded_items'     => Downloaded_Items::get_instance()->get_downloaded_items(),
+			'dismissed_banners'    => $this->get( 'dismissed_banners', [] ),
+			'start_page'           => $this->get( 'start_page', 'welcome' ),
+			'photo_resize_enabled' => (bool) $this->get( 'photo_resize_enabled', false ),
 		);
 	}
 

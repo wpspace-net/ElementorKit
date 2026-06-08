@@ -61,7 +61,8 @@ class Photos_Import extends API {
 			}
 		}
 
-		Limits::get_instance()->raise_limits();
+		$photo_resize_enabled = (bool) Options::get_instance()->get( 'photo_resize_enabled', false );
+		Limits::get_instance()->raise_limits( ! $photo_resize_enabled );
 
 		// Reach out to Extensions API for a download request of this item
 		$api_response = Plugin_API::get_instance()->api_call( '/get-element-download/?type=photo&id=' . $photo_id );
